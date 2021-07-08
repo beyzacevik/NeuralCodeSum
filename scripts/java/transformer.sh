@@ -42,12 +42,12 @@ PYTHONPATH=$SRC_DIR CUDA_VISIBLE_DEVICES=$RGPU python -W ignore ${SRC_DIR}/main/
 --max_src_len 150 \
 --max_tgt_len 50 \
 --emsize 512 \
---fix_embeddings False \
+--fix_embeddings True \
 --src_vocab_size 50000 \
 --tgt_vocab_size 30000 \
 --share_decoder_embeddings True \
 --max_examples -1 \
---batch_size 32 \
+--batch_size 64 \
 --test_batch_size 64 \
 --num_epochs 50 \
 --model_type transformer \
@@ -69,7 +69,6 @@ PYTHONPATH=$SRC_DIR CUDA_VISIBLE_DEVICES=$RGPU python -W ignore ${SRC_DIR}/main/
 --optimizer adam \
 --learning_rate 0.0001 \
 --lr_decay 0.99 \
---pretrained /content/drive/MyDrive/NeuralCodeSum/NeuralCodeSum/tmp/code2jdoc.mdl \
 --valid_metric bleu \
 --checkpoint False
 
