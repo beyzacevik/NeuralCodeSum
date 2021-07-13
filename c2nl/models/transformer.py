@@ -297,7 +297,6 @@ class Decoder(nn.Module):
 
 class Transformer(nn.Module):
     """Module that writes an answer for the question given a passage."""
-
     def __init__(self, args, tgt_dict):
         """"Constructor of the class."""
         super(Transformer, self).__init__()
