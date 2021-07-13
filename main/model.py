@@ -43,7 +43,7 @@ class Code2NaturalLanguage(object):
             self.network = Transformer(self.args, tgt_dict)
         else:
             raise RuntimeError('Unsupported model: %s' % args.model_type)
-
+            
         # Load saved state
         if state_dict:
             # Load buffer separately

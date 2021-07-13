@@ -12,7 +12,9 @@ import logging
 import subprocess
 import argparse
 import numpy as np
-
+from collections import Counter
+from sklearn.feature_extraction.text import TfidfVectorizer
+import pandas as pd
 import c2nl.config as config
 import c2nl.inputters.utils as util
 from c2nl.inputters import constants
@@ -30,6 +32,7 @@ from c2nl.eval.meteor import Meteor
 
 logger = logging.getLogger()
 
+FIRST_N_WORD_TFIDF = 20000
 
 def str2bool(v):
     return v.lower() in ('yes', 'true', 't', '1', 'y')
@@ -237,8 +240,28 @@ def init_from_scratch(args, train_exs, dev_exs):
     # Build a dictionary from the data questions + words (train/dev splits)
     logger.info('-' * 100)
     logger.info('Build word dictionary')
+
+    ############## New Addition #######################
+    dd = [" ".join(d) for d in train_exs + dev_exs]
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf = vectorizer.fit_transform(dd)
+    df = pd.DataFrame(tfidf.toarray(), columns=vectorizer.get_feature_names())
+    count = 0
+    for d in data:
+        c = Counter(d)
+        x = zip(df.iloc[count],vectorizer.get_feature_names())
+        x = sorted(x, key=lambda tup: (tup[0], tup[1]), reverse=True)
+        count+=1
+    
+    examples = []
+    for _,w in x[0:FIRST_N_WORD_TFIDF]:   
+        examples.append(w) 
+
+        
+    ############## New Addition #######################
+
     src_dict = util.build_word_and_char_dict(args,
-                                             examples=train_exs + dev_exs,
+                                             examples=examples,
                                              fields=['code'],
                                              dict_size=args.src_vocab_size,
                                              no_special_token=True)
